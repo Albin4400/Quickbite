@@ -1,0 +1,104 @@
+.offer-banner{
+  background: linear-gradient(to right, #fc8019, #ff5722);
+  color: white;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.offer-content h1{
+  font-size: 70px;
+  font-weight: bold;
+}
+
+.offer-content p{
+  font-size: 28px;
+  margin: 20px 0;
+}
+
+.offer-content button{
+  padding: 14px 35px;
+  border: none;
+  background-color: white;
+  color: #fc8019;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.choose-us{
+  padding: 80px 50px;
+  text-align: center;
+}
+
+.choose-us h1{
+  font-size: 45px;
+  margin-bottom: 50px;
+}
+
+.choose-container{
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.choose-card{
+  width: 260px;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: 0.3s;
+  background-color: white;
+}
+
+.choose-card:hover{
+  transform: translateY(-10px);
+}
+
+.choose-card h2{
+  font-size: 55px;
+}
+
+.choose-card h3{
+  margin: 20px 0;
+}
+
+.reviews{
+  background-color: #f8f8f8;
+  padding: 80px 50px;
+  text-align: center;
+}
+
+.reviews h1{
+  font-size: 45px;
+  margin-bottom: 50px;
+}
+
+.review-container{
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.review-card{
+  width: 320px;
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.review-card p{
+  font-size: 18px;
+  color: #555;
+}
+
+.review-card h4{
+  margin-top: 20px;
+  color: #fc8019;
+}
+
+.review-card span{
+  font-size: 22px;
+}

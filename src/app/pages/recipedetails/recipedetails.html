@@ -1,0 +1,92 @@
+<div class="container mt-5">
+
+  <div class="row">
+
+    <!-- Image Section -->
+    <div class="col-md-6">
+
+      <img
+        [src]="poductdetail.strMealThumb"
+        class="img-fluid rounded shadow"
+      >
+
+    </div>
+
+    <!-- Details Section -->
+    <div class="col-md-6">
+
+      <h1>{{ poductdetail.strMeal }}</h1>
+
+      <h4 class="text-success">
+        ₹299
+      </h4>
+
+      <p>
+        <strong>Category:</strong>
+        {{ poductdetail.strCategory }}
+      </p>
+
+      <p>
+        <strong>Area:</strong>
+        {{ poductdetail.strArea }}
+      </p>
+
+      <p>
+        Delicious and freshly prepared food with premium ingredients.
+      </p>
+
+      <button class="btn btn-danger me-3">
+        Add To Cart
+      </button>
+
+      <button class="btn btn-dark">
+        Buy Now
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Instructions -->
+  <div class="mt-5">
+
+    <h2>Recipe Instructions</h2>
+
+    <p>
+      {{ poductdetail.strInstructions }}
+    </p>
+
+  </div>
+
+  <!-- Ingredients -->
+  <div class="mt-5">
+
+    <h2>Ingredients</h2>
+
+    <ul class="list-group">
+
+      <li class="list-group-item">
+        {{ poductdetail.strIngredient1 }}
+      </li>
+
+      <li class="list-group-item">
+        {{ poductdetail.strIngredient2 }}
+      </li>
+
+      <li class="list-group-item">
+        {{ poductdetail.strIngredient3 }}
+      </li>
+
+      <li class="list-group-item">
+        {{ poductdetail.strIngredient4 }}
+      </li>
+
+      <li class="list-group-item">
+        {{ poductdetail.strIngredient5 }}
+      </li>
+
+    </ul>
+
+  </div>
+
+</div>
