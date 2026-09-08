@@ -13,10 +13,14 @@ export class Foods {
   data: any[] = [];
 
   ngOnInit(){
-    this.api.getfakerecipe().subscribe((res: any) => {
-      console.log(res);
-      this.data = res.meals ;
-      this.cdr.detectChanges();
+    this.api.getfakerecipe().subscribe({
+      next: (res: any) => {
+        this.data = res?.meals || [];
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error fetching meals from live API:', err);
+      }
     });
   } 
 }

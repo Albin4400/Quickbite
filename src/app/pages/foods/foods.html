@@ -1,7 +1,7 @@
 
 <div class="container text-center">
   <div class="row">
-    @for (item of data; track item.name) {
+    @for (item of data; track (item.idMeal || $index)) {
     <div class="col">
         <app-cards [product]="item"></app-cards>
     </div>
