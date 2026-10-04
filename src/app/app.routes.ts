@@ -7,12 +7,14 @@ import { Recipedetails } from './pages/recipedetails/recipedetails';
 import { LoginComponent } from './pages/login/login';
 import { RegisterComponent } from './pages/register/register';
 import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'admin', canActivate: [adminGuard], loadComponent: () => import('./pages/admin/admin').then(page => page.AdminDashboard) },
   { path: 'food', component: Foods, canActivate: [authGuard] },
   { path: 'foods', component: Foods, canActivate: [authGuard] },
   { path: 'contact', component: Contact },
@@ -21,4 +23,3 @@ export const routes: Routes = [
   { path: '**', redirectTo: '' },
   
 ];
-

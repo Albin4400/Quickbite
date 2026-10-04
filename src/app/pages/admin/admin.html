@@ -1,0 +1,174 @@
+<main class="admin-shell">
+  <aside class="admin-sidebar" aria-label="Admin navigation">
+    <a class="admin-brand" routerLink="/">
+      <span aria-hidden="true">🍔</span>
+      <span>QuickBite <small>Kitchen desk</small></span>
+    </a>
+
+    <p class="sidebar-label">WORKSPACE</p>
+    <nav class="section-nav">
+      <button mat-button [class.selected]="section() === 'overview'" (click)="section.set('overview')">Overview</button>
+      <button mat-button [class.selected]="section() === 'users'" (click)="section.set('users')">Manage users</button>
+      <button mat-button [class.selected]="section() === 'add-food'" (click)="section.set('add-food'); cancelEdit()">Add food</button>
+      <button mat-button [class.selected]="section() === 'foods'" (click)="section.set('foods')">Manage foods</button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <span class="admin-avatar" aria-hidden="true">{{ adminName().charAt(0).toUpperCase() }}</span>
+      <span class="admin-name">{{ adminName() }}<small>Administrator</small></span>
+      <button mat-button class="logout-button" (click)="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <section class="admin-content">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">QUICKBITE / ADMIN</p>
+        <h1>{{ section() === 'overview' ? 'Dashboard' : section() === 'users' ? 'Manage users' : section() === 'foods' ? 'Manage foods' : editingFoodKey() === null ? 'Add food' : 'Edit food' }}</h1>
+      </div>
+      <button mat-button class="view-menu-button" routerLink="/foods">View customer menu</button>
+    </header>
+
+    @if (errorMessage()) {
+      <div class="notice error-notice" role="alert">{{ errorMessage() }}</div>
+    }
+    @if (successMessage()) {
+      <div class="notice success-notice" role="status">{{ successMessage() }}</div>
+    }
+    @if (loading()) {
+      <p class="loading-message" role="status">Loading your kitchen dashboard…</p>
+    } @else {
+      @if (section() === 'overview') {
+        <p class="section-intro">A clear view of the people and dishes that make up your menu.</p>
+        <div class="overview-grid">
+          <mat-card class="summary-card">
+            <mat-card-content><span>Registered users</span><strong>{{ users().length }}</strong><small>Across all account roles</small></mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card">
+            <mat-card-content><span>Menu dishes</span><strong>{{ localFoods().length }}</strong><small>Added and maintained here</small></mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card welcome-card">
+            <mat-card-content><span>Good service starts here</span><strong>Keep it fresh.</strong><small>Update recipes and menu details any time.</small></mat-card-content>
+          </mat-card>
+        </div>
+        <div class="quick-actions">
+          <h2>Quick actions</h2>
+          <button mat-button (click)="section.set('add-food'); cancelEdit()">Add a dish</button>
+          <button mat-button (click)="section.set('users')">Review user roles</button>
+          <button mat-button (click)="section.set('foods')">Edit your menu</button>
+        </div>
+      }
+
+      @if (section() === 'users') {
+        <p class="section-intro">Review accounts and grant administrator access only where it is needed.</p>
+        <mat-card class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead>
+              <tbody>
+                @for (user of users(); track user.id) {
+                  <tr>
+                    <td class="user-name-cell">{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                      <mat-form-field appearance="outline" class="role-select">
+                        <mat-select [value]="user.role" [aria-label]="'Role for ' + user.name" (selectionChange)="changeUserRole(user, $event.value)">
+                          <mat-option value="user">User</mat-option>
+                          <mat-option value="admin">Admin</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </td>
+                    <td>{{ user.created_at ? (user.created_at | date:'mediumDate') : '—' }}</td>
+                  </tr>
+                } @empty {
+                  <tr><td colspan="4" class="empty-cell">No registered users yet.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <p class="privacy-note">Passwords are never included in this user list.</p>
+        </mat-card>
+      }
+
+      @if (section() === 'add-food') {
+        <p class="section-intro">Add a dish to the QuickBite menu. It will appear alongside recipes from TheMealDB.</p>
+        <mat-card class="form-card">
+          <form [formGroup]="foodForm" (ngSubmit)="saveFood()">
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Food name</mat-label>
+                <input matInput formControlName="name" autocomplete="off">
+                @if (foodForm.controls.name.hasError('required') && foodForm.controls.name.touched) { <mat-error>Name is required.</mat-error> }
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Category</mat-label>
+                <input matInput formControlName="category" placeholder="e.g. Main course">
+                @if (foodForm.controls.category.hasError('required') && foodForm.controls.category.touched) { <mat-error>Category is required.</mat-error> }
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Price (₹)</mat-label>
+                <input matInput type="number" min="0" step="0.01" formControlName="price">
+                @if (foodForm.controls.price.invalid && foodForm.controls.price.touched) { <mat-error>Enter a valid non-negative price.</mat-error> }
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Area / cuisine</mat-label>
+                <input matInput formControlName="area" placeholder="e.g. Indian">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="wide-field">
+                <mat-label>Image URL</mat-label>
+                <input matInput type="url" formControlName="image_url" placeholder="https://…">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="wide-field">
+                <mat-label>Description</mat-label>
+                <textarea matInput rows="3" formControlName="description"></textarea>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="wide-field">
+                <mat-label>Ingredients (one per line)</mat-label>
+                <textarea matInput rows="4" formControlName="ingredients" placeholder="Fresh tomatoes&#10;Basil&#10;Olive oil"></textarea>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="wide-field">
+                <mat-label>Recipe instructions</mat-label>
+                <textarea matInput rows="6" formControlName="instructions"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="form-actions">
+              @if (editingFoodKey() !== null) { <button mat-button type="button" (click)="cancelEdit()">Cancel</button> }
+              <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+                {{ saving() ? 'Saving…' : editingFoodKey() === null ? 'Add to menu' : 'Save changes' }}
+              </button>
+            </div>
+          </form>
+        </mat-card>
+      }
+
+      @if (section() === 'foods') {
+        <div class="list-heading">
+          <p class="section-intro">Only dishes created in this dashboard can be changed or removed.</p>
+          <button mat-flat-button color="primary" (click)="section.set('add-food'); cancelEdit()">Add food</button>
+        </div>
+        <div class="food-grid">
+          @for (food of localFoods(); track food.key) {
+            <mat-card class="food-card">
+              @if (food.imageUrl) { <img [src]="food.imageUrl" [alt]="food.name" loading="lazy"> }
+              <mat-card-content>
+                <div class="food-meta"><span>{{ food.category }}</span><span>₹{{ food.price }}</span></div>
+                <h2>{{ food.name }}</h2>
+                <p>{{ food.description || 'No description added.' }}</p>
+                <div class="food-actions">
+                  <button mat-button (click)="editFood(food)">Edit</button>
+                  <button mat-button class="remove-button" (click)="deleteFood(food)">Remove</button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          } @empty {
+            <div class="empty-menu">
+              <h2>Your menu is ready for its first dish.</h2>
+              <p>Start with a name, price and recipe. You can fill in the rest whenever you like.</p>
+              <button mat-flat-button color="primary" (click)="section.set('add-food'); cancelEdit()">Add your first dish</button>
+            </div>
+          }
+        </div>
+      }
+    }
+  </section>
+</main>

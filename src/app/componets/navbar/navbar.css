@@ -1,8 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800&display=swap');
-
 /* --- Global Navbar Base --- */
 .navbar {
-  font-family: 'Mulish', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: #ffffff !important;
   border-bottom: 1px solid #f2f2f2;
   padding-top: 0.8rem;

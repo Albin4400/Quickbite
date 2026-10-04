@@ -48,7 +48,7 @@ def register():
     access_token = create_access_token(
         identity=str(new_user.id),
         expires_delta=timedelta(days=7),
-        additional_claims={'name': new_user.name, 'email': new_user.email}
+        additional_claims={'name': new_user.name, 'email': new_user.email, 'role': new_user.role}
     )
 
     return jsonify({
@@ -78,7 +78,7 @@ def login():
     access_token = create_access_token(
         identity=str(user.id),
         expires_delta=timedelta(days=7),
-        additional_claims={'name': user.name, 'email': user.email}
+        additional_claims={'name': user.name, 'email': user.email, 'role': user.role}
     )
 
     return jsonify({

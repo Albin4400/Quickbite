@@ -4,10 +4,12 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from sqlalchemy import inspect, text
 
 from models import db, bcrypt
 from routes.auth import auth_bp
 from routes.food import food_bp
+from routes.admin import admin_bp
 
 # Load environment variables
 load_dotenv()
@@ -65,10 +67,19 @@ def create_app(test_config=None):
     # Register blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(food_bp)
+    app.register_blueprint(admin_bp)
 
-    # Create tables automatically on startup
+    # Create tables automatically on startup, and migrate older SQLite databases.
     with app.app_context():
         db.create_all()
+        inspector = inspect(db.engine)
+        if 'users' in inspector.get_table_names():
+            user_columns = {column['name'] for column in inspector.get_columns('users')}
+            if 'role' not in user_columns:
+                with db.engine.begin() as connection:
+                    connection.execute(
+                        text("ALTER TABLE users ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'user'")
+                    )
 
     @app.route('/', methods=['GET'])
     def root():

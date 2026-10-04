@@ -1,92 +1,42 @@
-<div class="container mt-5">
+<main class="container recipe-page">
+  @if (loading()) {
+    <p role="status">Loading dish…</p>
+  } @else if (errorMessage()) {
+    <div class="alert alert-warning" role="alert">{{ errorMessage() }}</div>
+  } @else if (food(); as item) {
+    <article>
+      <section class="recipe-hero">
+        <img class="recipe-image" [src]="item.imageUrl" [alt]="item.name">
+        <div class="recipe-summary">
+          <span class="recipe-origin">{{ item.source === 'admin' ? 'QUICKBITE KITCHEN' : 'RECIPE INSPIRATION' }}</span>
+          <h1>{{ item.name }}</h1>
+          <p class="recipe-price">₹{{ item.price }}</p>
+          <p><strong>Category:</strong> {{ item.category || 'Uncategorized' }}</p>
+          @if (item.area) { <p><strong>Area:</strong> {{ item.area }}</p> }
+          <p class="recipe-description">{{ item.description || 'Made fresh with carefully chosen ingredients.' }}</p>
+          <div class="recipe-buttons">
+            <button class="btn btn-danger" type="button">Add To Cart</button>
+            <button class="btn btn-dark" type="button">Buy Now</button>
+          </div>
+        </div>
+      </section>
 
-  <div class="row">
-
-    <!-- Image Section -->
-    <div class="col-md-6">
-
-      <img
-        [src]="poductdetail.strMealThumb"
-        class="img-fluid rounded shadow"
-      >
-
-    </div>
-
-    <!-- Details Section -->
-    <div class="col-md-6">
-
-      <h1>{{ poductdetail.strMeal }}</h1>
-
-      <h4 class="text-success">
-        ₹299
-      </h4>
-
-      <p>
-        <strong>Category:</strong>
-        {{ poductdetail.strCategory }}
-      </p>
-
-      <p>
-        <strong>Area:</strong>
-        {{ poductdetail.strArea }}
-      </p>
-
-      <p>
-        Delicious and freshly prepared food with premium ingredients.
-      </p>
-
-      <button class="btn btn-danger me-3">
-        Add To Cart
-      </button>
-
-      <button class="btn btn-dark">
-        Buy Now
-      </button>
-
-    </div>
-
-  </div>
-
-  <!-- Instructions -->
-  <div class="mt-5">
-
-    <h2>Recipe Instructions</h2>
-
-    <p>
-      {{ poductdetail.strInstructions }}
-    </p>
-
-  </div>
-
-  <!-- Ingredients -->
-  <div class="mt-5">
-
-    <h2>Ingredients</h2>
-
-    <ul class="list-group">
-
-      <li class="list-group-item">
-        {{ poductdetail.strIngredient1 }}
-      </li>
-
-      <li class="list-group-item">
-        {{ poductdetail.strIngredient2 }}
-      </li>
-
-      <li class="list-group-item">
-        {{ poductdetail.strIngredient3 }}
-      </li>
-
-      <li class="list-group-item">
-        {{ poductdetail.strIngredient4 }}
-      </li>
-
-      <li class="list-group-item">
-        {{ poductdetail.strIngredient5 }}
-      </li>
-
-    </ul>
-
-  </div>
-
-</div>
+      <section class="recipe-body">
+        <div>
+          <h2>Recipe instructions</h2>
+          <p class="instructions">{{ item.instructions || 'Recipe instructions have not been provided yet.' }}</p>
+        </div>
+        <div>
+          <h2>Ingredients</h2>
+          <ul class="list-group">
+            @for (ingredient of item.ingredients; track $index) {
+              <li class="list-group-item">{{ ingredient }}</li>
+            } @empty {
+              <li class="list-group-item">Ingredients have not been provided yet.</li>
+            }
+          </ul>
+        </div>
+      </section>
+    </article>
+  }
+</main>

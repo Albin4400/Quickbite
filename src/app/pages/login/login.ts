@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     // If already logged in, redirect away
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/foods']);
+      this.router.navigate([this.authService.isAdmin() ? '/admin' : '/foods']);
       return;
     }
 
@@ -67,7 +67,10 @@ export class LoginComponent implements OnInit {
     this.authService.login({ email, password }).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigateByUrl(this.returnUrl);
+        const destination = this.authService.isAdmin()
+          ? (this.returnUrl === '/foods' ? '/admin' : this.returnUrl)
+          : (this.returnUrl.startsWith('/admin') ? '/foods' : this.returnUrl);
+        this.router.navigateByUrl(destination);
       },
       error: (err) => {
         this.isLoading = false;

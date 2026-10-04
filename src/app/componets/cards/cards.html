@@ -1,14 +1,13 @@
-<div  class="card"  style="width: 18rem;"[routerLink]="['/recipedetails', product.idMeal]">
+<a class="card food-card" [routerLink]="['/recipedetails', product().key]">
 
-  <img [src]="product.strMealThumb"
+  <img [src]="product().imageUrl"
     class="card-img-top"
-    alt="food image"
+    [alt]="product().name"
   >
 
   <div class="card-body">
-    <p class="card-text">
-      {{ product.strMeal }}
-    </p>
+    <p class="card-text">{{ product().name }}</p>
+    <span class="food-source">{{ product().source === 'admin' ? 'QuickBite kitchen' : 'Recipe inspiration' }}</span>
   </div>
 
-</div>
+</a>

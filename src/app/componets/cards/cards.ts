@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
-import { Input } from '@angular/core';
-import {  RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { Food } from '../../models/food.model';
 
 @Component({
   selector: 'app-cards',
   imports: [RouterLink],
   templateUrl: './cards.html',
   styleUrl: './cards.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cards {
-  @Input() product: any;
+  readonly product = input.required<Food>();
 }

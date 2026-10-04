@@ -65,6 +65,8 @@ export class AuthService {
   /**
    * Get JWT access token from localStorage.
    */
+
+
   getToken(): string | null {
     if (typeof window === 'undefined') return null;
     return localStorage.getItem(this.TOKEN_KEY);
@@ -75,6 +77,38 @@ export class AuthService {
    */
   getUser(): User | null {
     return this.currentUser();
+  }
+
+  /**
+   * Decode JWT token and return the user's role claim.
+   * Returns null if token is missing or role not present.
+   */
+  getUserRole(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = token.split('.')[1];
+      const decoded = JSON.parse(atob(payload));
+      return decoded.role ?? null;
+    } catch (e) {
+      console.error('Failed to decode token for role', e);
+      return null;
+    }
+  }
+
+  isAdmin(): boolean {
+    return this.getUserRole() === 'admin' && this.currentUser()?.role === 'admin';
+  }
+
+  getCurrentUser(): Observable<{ user: User }> {
+    return this.http.get<{ user: User }>(`${this.API_URL}/me`);
+  }
+
+  refreshCurrentUser(user: User): void {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    }
+    this.currentUser.set(user);
   }
 
   /**

@@ -10,6 +10,18 @@
   margin: 20px;
 }
 
+.food-card {
+  display: block;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+
+.food-source {
+  color: #8b8d88;
+  font-size: 12px;
+}
+
 /* Hover effect */
 .card:hover {
   transform: translateY(-8px);

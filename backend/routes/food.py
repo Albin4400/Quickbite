@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import abort
+from models import Food
 
 food_bp = Blueprint('food', __name__, url_prefix='/api')
 
@@ -70,3 +72,23 @@ def get_foods():
         'count': len(SAMPLE_FOODS),
         'foods': SAMPLE_FOODS
     }), 200
+
+
+@food_bp.route('/foods/local', methods=['GET'])
+@jwt_required()
+def get_local_foods():
+    foods = Food.query.filter_by(source='admin').order_by(Food.created_at.desc()).all()
+    return jsonify({
+        'status': 'success',
+        'count': len(foods),
+        'foods': [food.to_dict() for food in foods]
+    }), 200
+
+
+@food_bp.route('/foods/local/<int:food_id>', methods=['GET'])
+@jwt_required()
+def get_local_food(food_id):
+    food = Food.query.filter_by(id=food_id, source='admin').first()
+    if food is None:
+        abort(404)
+    return jsonify({'status': 'success', 'food': food.to_dict()}), 200

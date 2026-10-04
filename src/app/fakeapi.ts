@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MealDbResponse } from './models/food.model';
 
 
 @Injectable({
@@ -8,9 +9,9 @@ import { HttpClient } from '@angular/common/http';
 export class Fakeapi {
   constructor(private http: HttpClient) {}
   getfakerecipe(){
-    return this.http.get('https://www.themealdb.com/api/json/v1/1/search.php?s');
+    return this.http.get<MealDbResponse>('https://www.themealdb.com/api/json/v1/1/search.php?s');
   }
   getfakerecipebyid(id: string){
-    return this.http.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+    return this.http.get<MealDbResponse>(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${encodeURIComponent(id)}`);
   }
 }
